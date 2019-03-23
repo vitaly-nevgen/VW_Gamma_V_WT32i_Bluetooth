@@ -2,7 +2,9 @@
 <workbench version="2.0">
 <workbenchAdvisor/>
 <window>
-<fastViewData fastViewLocation="1024"/>
+<fastViewData fastViewLocation="1024">
+<orientation position="512" view="org.eclipse.debug.ui.ExpressionView"/>
+</fastViewData>
 <perspectiveBar/>
 <page focus="true" label="Workspace - CooCox CoBuilder">
 <editors>
@@ -23,6 +25,7 @@
 <part id="10"/>
 <part id="11"/>
 <part id="12"/>
+<part id="13"/>
 </presentation>
 </folder>
 </info>
@@ -75,9 +78,14 @@
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/DY-6MW7U53-2-bluetooth/stm_lib/src/command_handler.c"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2289" selectionTopPixel="562"/>
 </editor>
-<editor activePart="true" focus="true" id="org.coocox.builder.ui.editors.repository.RepositoryBrowser" name="Repository" partName="Repository" title="Repository" tooltip="Repository" workbook="DefaultEditorWorkbook">
+<editor id="org.coocox.builder.ui.editors.repository.RepositoryBrowser" name="Repository" partName="Repository" title="Repository" tooltip="Repository" workbook="DefaultEditorWorkbook">
 <input factoryID="org.coocox.component.ui.editors.repository.RepositoryElementFactory">
 <subPage horizontalPosition="0" selectedItemId="0" subPageIndex="2" verticalPosition="0"/>
+</input>
+</editor>
+<editor activePart="true" focus="true" id="org.coocox.builder.ui.editors.ConfigEditor" name="" partName="Configuration" title="Configuration" tooltip="" workbook="DefaultEditorWorkbook">
+<input factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory">
+<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="5" verticalPosition="0"/>
 </input>
 </editor>
 </editors>
@@ -86,7 +94,7 @@
 <viewState/>
 </view>
 <view id="org.coocox.builder.ui.views.ProjectView" partName="Project">
-<viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="12">
+<viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="0">
 <expanded>
 <element path="/DY-6MW7U53-2-bluetooth"/>
 <element path="/DY-6MW7U53-2-bluetooth/cmsis_boot"/>
@@ -101,11 +109,6 @@
 </view>
 <view id="org.coocox.component.ui.ComponentView" partName="Components">
 <viewState/>
-</view>
-<view id="org.coocox.builder.ui.exampleView" partName="CAN Examples">
-<viewState>
-<Examples ComponentId="495" Title="CAN"/>
-</viewState>
 </view>
 <view id="org.coocox.codebugger.trace.ui.traceview" partName="Semihosting">
 <viewState/>
@@ -127,14 +130,14 @@
 <view id="org.eclipse.debug.ui.VariableView" partName="Variables">
 <viewState/>
 </view>
-<view id="org.coocox.component.ui.Help" partName="Help">
-<viewState/>
-</view>
 <view id="org.eclipse.ui.views.ContentOutline" partName="Outline">
 <viewState/>
 </view>
+<view id="org.coocox.component.ui.Help" partName="Help">
+<viewState/>
+</view>
 </views>
-<perspectives activePart="org.coocox.builder.ui.editors.repository.RepositoryBrowser" activePerspective="org.coocox.builder.perspective.CoBuilder">
+<perspectives activePart="org.coocox.builder.ui.editors.ConfigEditor" activePerspective="org.coocox.builder.perspective.CoBuilder">
 <perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
 <descriptor class="org.coocox.builder.ui.PerspectiveCoBuilder" id="org.coocox.builder.perspective.CoBuilder" label="CooCox CoBuilder"/>
 <alwaysOnActionSet id="org.coocox.component.ui.actionSet"/>
@@ -170,7 +173,6 @@
 <view id="org.eclipse.cdt.ui.callHierarchy"/>
 <view id="org.eclipse.search.ui.views.SearchView"/>
 <view id="org.coocox.component.ui.Help"/>
-<view id="org.coocox.builder.ui.exampleView"/>
 <fastViewBars/>
 <layout>
 <mainWindow>
@@ -201,11 +203,9 @@
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@4354cb" ratio="0.18019906" ratioLeft="344" ratioRight="1565" relationship="2" relative="org.eclipse.ui.internal.ViewStack@fde050">
-<folder activePageID="org.coocox.builder.ui.exampleView" appearance="2" expanded="2">
-<page content="org.coocox.builder.ui.exampleView" label="CAN Examples"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-</presentation>
+<folder appearance="2" expanded="2">
+<page content="org.coocox.builder.ui.exampleView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@14bcae9" ratio="0.85325265" ratioLeft="2820" ratioRight="485" relationship="2" relative="org.eclipse.ui.internal.ViewStack@4354cb">
@@ -350,13 +350,13 @@
 <editor factoryID="org.coocox.component.ui.editors.repository.RepositoryElementFactory" id="org.coocox.builder.ui.editors.repository.RepositoryBrowser">
 <subPage horizontalPosition="0" selectedItemId="0" subPageIndex="2" verticalPosition="0"/>
 </editor>
+<editor factoryID="org.coocox.component.ui.editors.repository.RepositoryElementFactory" id="org.coocox.builder.ui.editors.repository.RepositoryBrowser">
+<subPage horizontalPosition="0" selectedItemId="0" subPageIndex="2" verticalPosition="0"/>
+</editor>
+<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
+<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="5" verticalPosition="0"/>
+</editor>
 </editors>
-<item historyLabel="command_handler.c" index="0">
-<position info="not_deleted" x="1120" y="0"/>
-</item>
-<item historyLabel="command_handler.h" index="2">
-<position info="not_deleted" x="287" y="0"/>
-</item>
 <item historyLabel="usart_opts.h" index="3">
 <position info="not_deleted" x="146" y="9"/>
 </item>
@@ -498,7 +498,9 @@
 <item historyLabel="main.c" index="15">
 <position info="not_deleted" x="13692" y="0"/>
 </item>
-<item active="true" historyLabel="Repository" index="16"/>
+<item historyLabel="Repository" index="16"/>
+<item historyLabel="Repository" index="17"/>
+<item active="true" historyLabel="Configuration" index="18"/>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
@@ -506,9 +508,34 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f10x_usart.h" tooltip="Can Hacker/stm_lib/inc/stm32f10x_usart.h">
+<persistable path="/Can Hacker/stm_lib/inc/stm32f10x_usart.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="printf.c" tooltip="Can Hacker/stdio/printf.c">
+<persistable path="/Can Hacker/stdio/printf.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="can.c" tooltip="Can Hacker/can.c">
+<persistable path="/Can Hacker/can.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="can.h" tooltip="Can Hacker/can.h">
+<persistable path="/Can Hacker/can.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f10x.h" tooltip="Can Hacker/cmsis_boot/stm32f10x.h">
+<persistable path="/Can Hacker/cmsis_boot/stm32f10x.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="Can Hacker/main.c">
+<persistable path="/Can Hacker/main.c"/>
+</file>
+<file factoryID="org.coocox.component.board.ui.editor.BoardEditorElementFactory" id="org.coocox.component.board.ui.editor.BoardBrowserEditor" name="Board" tooltip="Board">
+<persistable>&#x0A;<subPage/>
+</persistable>
+</file>
+<file factoryID="org.coocox.component.board.ui.editor.BoardEditorElementFactory" id="org.coocox.component.board.ui.editor.BoardBrowserEditor" name="Board" tooltip="Board">
+<persistable>&#x0A;<subPage/>
+</persistable>
+</file>
 <file factoryID="org.coocox.component.ui.editors.repository.RepositoryElementFactory" id="org.coocox.builder.ui.editors.repository.RepositoryBrowser" name="Repository" tooltip="Repository">
-<persistable>
-<subPage horizontalPosition="0" selectedItemId="0" subPageIndex="2" verticalPosition="0"/>
+<persistable>&#x0A;<subPage/>
 </persistable>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="command_handler.c" tooltip="DY-6MW7U53-2-bluetooth/stm_lib/src/command_handler.c">
@@ -516,36 +543,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f10x.c" tooltip="DY-6MW7U53-2-bluetooth/cmsis_boot/system_stm32f10x.c">
 <persistable path="/DY-6MW7U53-2-bluetooth/cmsis_boot/system_stm32f10x.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="DY-6MW7U53-2-bluetooth/main.c">
-<persistable path="/DY-6MW7U53-2-bluetooth/main.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="misc.c" tooltip="DY-6MW7U53-2-bluetooth/stm_lib/src/misc.c">
-<persistable path="/DY-6MW7U53-2-bluetooth/stm_lib/src/misc.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="iwrap.h" tooltip="DY-6MW7U53-2-bluetooth/stm_lib/inc/iwrap.h">
-<persistable path="/DY-6MW7U53-2-bluetooth/stm_lib/inc/iwrap.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="parser.h" tooltip="DY-6MW7U53-2-bluetooth/stm_lib/inc/parser.h">
-<persistable path="/DY-6MW7U53-2-bluetooth/stm_lib/inc/parser.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="iwrap.c" tooltip="DY-6MW7U53-2-bluetooth/stm_lib/src/iwrap.c">
-<persistable path="/DY-6MW7U53-2-bluetooth/stm_lib/src/iwrap.c"/>
-</file>
-<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="string.h" tooltip="C:\Program Files (x86)\GNU Tools Arm Embedded\7 2018-q2-update\arm-none-eabi\include\string.h">
-<persistable path="C:\Program Files (x86)\GNU Tools Arm Embedded\7 2018-q2-update\arm-none-eabi\include\string.h" project="DY-6MW7U53-2-bluetooth"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usart_opts.h" tooltip="DY-6MW7U53-2-bluetooth/stm_lib/inc/usart_opts.h">
-<persistable path="/DY-6MW7U53-2-bluetooth/stm_lib/inc/usart_opts.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f10x_adc.h" tooltip="DY-6MW7U53-2-bluetooth/stm_lib/inc/stm32f10x_adc.h">
-<persistable path="/DY-6MW7U53-2-bluetooth/stm_lib/inc/stm32f10x_adc.h"/>
-</file>
-<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="string.h" tooltip="C:\Program Files (x86)\GNU Tools ARM Embedded\5.4 2016q3\arm-none-eabi\include\string.h">
-<persistable path="C:\Program Files (x86)\GNU Tools ARM Embedded\5.4 2016q3\arm-none-eabi\include\string.h" project="DY-6MW7U53-2-bluetooth"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="config.h" tooltip="DY-6MW7U53-2-bluetooth/stm_lib/inc/config.h">
-<persistable path="/DY-6MW7U53-2-bluetooth/stm_lib/inc/config.h"/>
 </file>
 </mruList>
 </workbench>
