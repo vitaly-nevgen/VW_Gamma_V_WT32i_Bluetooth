@@ -5,7 +5,12 @@
 uint16_t fuel_consumption;
 uint32_t fuel_cons_cnt;
 uint8_t can_cnt = 0;
+uint8_t fuel_consump_avl = 0;
 
+uint8_t IsFuelConsumptionAvailable()
+{
+	return fuel_consump_avl;
+}
 uint16_t GetLitersPerHour()
 {
 	uint16_t res = fuel_consumption * 8.0;
@@ -22,18 +27,23 @@ void CanRxHandler(CanRxMsg* RxMessage)
 			if (RxMessage->DLC == 6)
 			{
 				can_cnt++;
-				uint16_t tmp =  RxMessage->Data[0];
+				uint16_t tmp = RxMessage->Data[0];
 				tmp <<= 8;
 				tmp |= RxMessage->Data[1];
 				if (tmp == 0xFFFF)
 				{
 					tmp = 0;
+					fuel_consump_avl = 0;
 				}				
+				else
+				{
+					fuel_consump_avl = 1;
+				}
 				fuel_cons_cnt += tmp;
-				if (can_cnt == 10)
+				if (can_cnt == 5)
 				{
 					can_cnt = 0;
-					fuel_consumption = fuel_cons_cnt / 10;					
+					fuel_consumption = fuel_cons_cnt / 5;					
 					fuel_cons_cnt = 0;					
 				}							
 			}

@@ -16,6 +16,7 @@ enum beeps
 	LONG_BEEP_3 = 0x10
 };
 
+uint8_t IsFuelConsumptionAvailable();
 uint16_t GetLitersPerHour();
 
 void CanRxHandler(CanRxMsg* RxMessage);

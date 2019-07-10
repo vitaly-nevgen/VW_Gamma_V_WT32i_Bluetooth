@@ -113,7 +113,7 @@ void HandleDisplayData()
 	}
 		
 	
-	isAux = memcmp(&displayBuffer[6], (uint8_t*) "AUX", 3) == 0;
+	isAux = (memcmp(&displayBuffer[6], (uint8_t*) "AUX", 3) == 0);
 	
 	switch (display_mode)
 	{
@@ -150,7 +150,27 @@ void HandleDisplayData()
 		{
 			if (!isAux) frame_delay = 100;
 			ResetDisplayState();
-			memcpy(displayDataBuffer, &displayBuffer[2], DISPLAY_STRING_SIZE);
+			
+			if (memcmp(&displayBuffer[2], "            ", 12) == 0 && !(displayBuffer[16] & 0x10) && !(displayBuffer[17] & 0x01))
+			{
+				if (IsFuelConsumptionAvailable())
+				{
+					uint16_t res = GetLitersPerHour();
+					char tmp[12] = { 0 };
+					if (res == 0)
+					{
+						sprintf(tmp, " -.- l/h");
+					}
+					else
+					{
+						sprintf(tmp, "%*d.%d l/h", 2, res / 10, res % 10);
+					}					
+					strcpy(&displayBuffer[2], tmp);
+				}	
+			}	
+			
+			
+			memcpy(displayDataBuffer, &displayBuffer[2], DISPLAY_STRING_SIZE);					
 		}
 		
 		break;
@@ -164,20 +184,12 @@ void HandleDisplayData()
 	case DISPLAY_SETTINGS:
 		break;
 	case DISPLAY_OTHER:
-		if (memcmp(&displayBuffer[2], "            ", 12) == 0)
-		{
-			uint16_t res = GetLitersPerHour();
-			char tmp[12] = { 0 };
-			sprintf(tmp, "%*d.%d l/h", 2, res / 10, res % 10);
-			strcpy(&displayBuffer[2], tmp);
-		}	
+		
+		
 		break;
 	default:
 		break;
-	}
-
-
-	
+	}	
 	
 	switch (display_state)
 	{
