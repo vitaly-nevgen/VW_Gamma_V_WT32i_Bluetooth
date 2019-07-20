@@ -180,6 +180,7 @@ void HandleCommandData()
 		break;
 	case CD_BUTTON:
 	case FM_BUTTON:
+	case POWER_BUTTON:
 		button_val = commandBuffer[1];
 		if (button_state == LONG_PRESSED)
 		{
@@ -193,7 +194,7 @@ void HandleCommandData()
 			button_state = LONG_PRESSED;
 			press_delay = 0;
 		}
-		break;
+		break;	
 	}
 
 	switch (main_fsm)
@@ -205,9 +206,15 @@ void HandleCommandData()
 			{							
 				main_fsm = BT_ACTIVATE;
 			}
-			if (button_val == CD_BUTTON)
+			else if (button_val == CD_BUTTON)
 			{
-				ActivateAUX();           //TODO: убрать костыль
+				ActivateAUX();             //TODO: убрать костыль
+			}
+			else if (button_val == POWER_BUTTON)
+			{
+				CanBeep(SHORT_BEEP);
+				ShowMenu();
+				main_fsm = SHOW_MENU;		
 			}
 		}
 		break;
@@ -288,7 +295,30 @@ void HandleCommandData()
 		Bluetooth_off();
 		main_fsm = NORMAL_STATE;
 		break;
+	case SHOW_MENU:		
+		if (commandBuffer[5] == VOL_DN || commandBuffer[5] == VOL_UP)
+		{			
+			ExecCommand(commandBuffer[5]);	
+		}
+		if (commandBuffer[1] == POWER_BUTTON)
+		{			
+			if (avrcp_trig == 0)
+			{
+				ExecCommand(POWER_BUTTON);	
+				avrcp_trig = 1;
+			}
+			commandBuffer[1] = NOTHING;
+		}
+		else
+		{
+			avrcp_trig = 0;
+		}
+		memcpy(commandBuffer, default_command, COMMAND_BUFFER_SIZE);		
+		break;
 	}
+	
+	
+	
 	static uint8_t aux_press_delay = 0;
 	if (act_aux)
 	{

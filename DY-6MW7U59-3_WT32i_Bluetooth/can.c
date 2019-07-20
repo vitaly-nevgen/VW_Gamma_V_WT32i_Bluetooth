@@ -72,6 +72,23 @@ void CanSendMessage(CanTxMsg* TxMessage)
 	CAN_Transmit(CAN1, TxMessage);	
 }
 
+void SendCustomization(MenuItem item)
+{
+	CanBeep(DOUBLE_BEEP);
+	CanTxMsg TxMessage;
+	TxMessage.StdId = CAN_ID_CUSTOM;  	
+	TxMessage.ExtId = 0x00;  
+	TxMessage.IDE = CAN_Id_Standard;  				
+	TxMessage.RTR = CAN_RTR_DATA;  					
+	TxMessage.DLC = 5;
+	memset(TxMessage.Data, 0x00, 8);
+	
+	TxMessage.Data[3] = 0x80;
+	TxMessage.Data[3] |= (item.values[item.selected_idx] << 4);	
+	TxMessage.Data[4] = item.id;	
+	
+	CanSendMessage(&TxMessage);
+}
 void CanBeep(uint8_t beep_type)
 {
 	CanTxMsg TxMessage;

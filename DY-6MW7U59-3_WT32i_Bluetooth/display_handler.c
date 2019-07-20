@@ -38,6 +38,19 @@ uint8_t btLastState = 0;
 int16_t offset;              
 uint8_t offset_step;
 uint8_t delay;
+static uint8_t menu_idx = 0;
+static int8_t menu_val = 0;
+static uint8_t menu_delay_cnt = 0;
+static uint8_t menu_change_allowed = 0;
+
+MenuItem Menu[] =
+{
+	{ "C-Flshr", 2, 2, { "ON", "OFF" }, { 1, 0 } },
+	{ "C-Washr", 40, 2, { "ON", "OFF" }, { 1, 0 } },
+	{ "A-Light", 9, 5, { "1", "2", "3", "4", "5" }, { 0, 1, 2, 3, 4 } }, //!
+	{ "WndTime", 24, 4, { "0", "30", "180", "600" }, { 0, 1, 2, 3 } },
+	{ "DoorLck", 14, 2, { "ON", "OFF" }, { 1, 0 } }
+};
 
 
 enum displayState
@@ -62,6 +75,49 @@ void CheckMode()
 		}
 }
 
+void ExecCommand(uint8_t command)
+{
+	switch (command)
+	{
+	case VOL_UP:
+
+		if (++menu_val >= Menu[menu_idx].items_cnt)
+		{
+			menu_val--;
+		}
+		else
+		{
+			menu_change_allowed = 1;
+		}
+		break;
+	case VOL_DN:
+		if (--menu_val < 0)
+		{
+			menu_val = 0;
+		}
+		else
+		{
+			menu_change_allowed = 1;
+		}
+		break;
+	case POWER_BUTTON:
+		if (++menu_idx == sizeof(Menu) / sizeof(MenuItem))
+		{
+			menu_idx = 0;
+		}
+		menu_val = Menu[menu_idx].selected_idx;
+		menu_change_allowed = 0;
+		break;
+	default:
+		break;
+	}
+	Menu[menu_idx].selected_idx = menu_val;
+	menu_delay_cnt = 0;
+}
+void ShowMenu(void)
+{
+	display_mode = DISPLAY_SETTINGS;
+}
 
 
 void ResetDisplayState()
@@ -105,6 +161,7 @@ void HandleDisplayData()
 {
 	IncTick();
 	static uint8_t frame_delay = 0;		
+	
 		
 	if (CheckChksum(displayBuffer, DISPLAY_BUFFER_SIZE) == ERROR)
 	{
@@ -182,6 +239,22 @@ void HandleDisplayData()
 		}
 		break;
 	case DISPLAY_SETTINGS:
+		memcpy(displayBuffer, defaultScreen, DISPLAY_BUFFER_SIZE);
+		sprintf((char*)displayDataBuffer, "%s: %*s", Menu[menu_idx].name, 3, Menu[menu_idx].items[menu_val]);
+		if (menu_delay_cnt++ > MENU_SHOW_DELAY)
+		{
+			menu_delay_cnt = 0;
+			main_fsm = NORMAL_STATE;
+			display_mode = DISPLAY_NORMAL;
+		}		
+		if (menu_delay_cnt == MENU_APPLY_DELAY)
+		{
+			if (menu_change_allowed)
+			{
+				SendCustomization(Menu[menu_idx]);
+				menu_change_allowed = 0;
+			}			
+		}
 		break;
 	case DISPLAY_OTHER:
 		
@@ -288,7 +361,7 @@ void HandleDisplayData()
 	    //displayBuffer[6] = (ADC_GetConversionValue(ADC1) / 10) % 10 + 48;
 	    //displayBuffer[7] = ADC_GetConversionValue(ADC1) % 10 + 48;
 	      //displayBuffer[14] = 0x00;
-	/*
+
 	for (uint8_t i = 0, j = 2; i < COMMAND_BUFFER_SIZE; i++)
 	{
 		uint8_t tmp;

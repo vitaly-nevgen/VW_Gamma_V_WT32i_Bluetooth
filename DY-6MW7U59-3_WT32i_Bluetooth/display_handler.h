@@ -15,6 +15,18 @@ enum EDisplayMode
 	DISPLAY_SETTINGS,
 	DISPLAY_OTHER
 };
+typedef struct MenuItem_s
+{
+	char name[8];
+	uint8_t id;
+	uint8_t items_cnt;
+	const char* items[6];
+	uint8_t values[6];
+	uint8_t selected_idx;
+}MenuItem;
+
+
+
 
 
 void ResetDisplayState(void);
@@ -23,6 +35,8 @@ void ClearDisplayBtString(void);
 void HandleDisplayData(void);
 void CheckMode(void);
 void ForceShowString(const char*);
+void ShowMenu(void);
+void ExecCommand(uint8_t); 
 uint8_t isAux;
 
 #endif

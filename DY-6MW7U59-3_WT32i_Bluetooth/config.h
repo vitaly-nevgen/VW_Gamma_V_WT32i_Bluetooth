@@ -49,6 +49,7 @@
 
 #define DISPLAY_STRING_DELAY 10
 #define OFFSET_STEP_DELAY 1
-
+#define MENU_SHOW_DELAY 50
+#define MENU_APPLY_DELAY 15
 
 #endif
