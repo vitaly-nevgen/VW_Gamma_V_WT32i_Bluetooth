@@ -2,6 +2,8 @@
 #include "string.h"
 #include "display_handler.h"
 
+extern enum EDisplayMode display_mode;
+
 uint16_t fuel_consumption;
 uint32_t fuel_cons_cnt;
 uint8_t can_cnt = 0;
@@ -48,6 +50,23 @@ void CanRxHandler(CanRxMsg* RxMessage)
 				}							
 			}
 		}
+		if (RxMessage->StdId == CAN_ID_CUSTOM_RECEIVE && display_mode != DISPLAY_SETTINGS)		
+		{			
+			if (RxMessage->DLC == 8)
+			{
+				for (uint8_t i = 0; i < 3; i++)
+				{
+					uint16_t custom_cell = RxMessage->Data[(i * 2) + 2];
+					custom_cell <<= 8;
+					custom_cell |= RxMessage->Data[(i * 2) + 1];
+					if (custom_cell & CAN_CUSTOM_ENABLE_MASK)
+					{						
+						SetCustomItem(custom_cell);	
+					}
+				}
+			}
+		}
+		
 		if (RxMessage->StdId == 0x000)		
 		{
 			RxMessage->DLC = 	0x00;
@@ -76,7 +95,7 @@ void SendCustomization(MenuItem item)
 {
 	CanBeep(DOUBLE_BEEP);
 	CanTxMsg TxMessage;
-	TxMessage.StdId = CAN_ID_CUSTOM;  	
+	TxMessage.StdId = CAN_ID_CUSTOM_SEND;  	
 	TxMessage.ExtId = 0x00;  
 	TxMessage.IDE = CAN_Id_Standard;  				
 	TxMessage.RTR = CAN_RTR_DATA;  					

@@ -45,11 +45,12 @@ static uint8_t menu_change_allowed = 0;
 
 MenuItem Menu[] =
 {
-	{ "C-Flshr", 2, 2, { "ON", "OFF" }, { 1, 0 } },
-	{ "C-Washr", 40, 2, { "ON", "OFF" }, { 1, 0 } },
-	{ "A-Light", 9, 5, { "1", "2", "3", "4", "5" }, { 0, 1, 2, 3, 4 } }, //!
-	{ "WndTime", 24, 4, { "0", "30", "180", "600" }, { 0, 1, 2, 3 } },
-	{ "DoorLck", 14, 2, { "ON", "OFF" }, { 1, 0 } }
+	{ "C-Flshr", 2, 2, { "OFF", "ON" }, { 0, 1 }, 0, 0 },
+	{ "A-Light", 9, 5, { "1", "2", "3", "4", "5" }, { 0, 1, 2, 3, 4 }, 0, 0 },
+	{ "RoomLmp", 11, 7, { "0", "7.5", "15", "30", "60", "120", "180" }, { 0, 1, 2, 3, 4, 5, 6 }, 0, 0 },
+	{ "DoorLck", 14, 2, { "OFF", "ON" }, { 0, 1 }, 0, 0 },
+	{ "WndTime", 24, 4, { "0", "30", "180", "600" }, { 0, 1, 2, 3 }, 0, 0 },
+	{ "C-Washr", 40, 2, { "OFF", "ON" }, { 0, 1 }, 0, 0 },	
 };
 
 
@@ -75,12 +76,41 @@ void CheckMode()
 		}
 }
 
+void SetCustomItem(uint16_t item)
+{
+	for (uint8_t i = 0; i < (sizeof(Menu) / sizeof(MenuItem)); i++)
+	{		
+		if (Menu[i].id == (uint8_t)(item & CAN_CUSTOM_ID_MASK))
+		{
+			Menu[i].enabled = 1;
+			Menu[i].selected_idx = (uint8_t)((item & CAN_CUSTOM_VAL_MASK) >> 6);
+			if (Menu[i].selected_idx >= Menu[i].items_cnt)
+			{
+				Menu[i].selected_idx = 0;
+				ForceShowString("Error in menu. Index out of range.");			
+			}
+			break;
+		}
+	}
+}
+
+uint8_t GetFirstEnabledMenuItem()
+{
+	for (uint8_t i = 0; i < (sizeof(Menu) / sizeof(MenuItem)); i++)
+	{		
+		if (Menu[i].enabled == 1)
+		{
+			return i;
+		}
+	}
+	return 0xFF;
+}
+
 void ExecCommand(uint8_t command)
 {
 	switch (command)
 	{
 	case VOL_UP:
-
 		if (++menu_val >= Menu[menu_idx].items_cnt)
 		{
 			menu_val--;
@@ -101,13 +131,25 @@ void ExecCommand(uint8_t command)
 		}
 		break;
 	case POWER_BUTTON:
-		if (++menu_idx == sizeof(Menu) / sizeof(MenuItem))
 		{
-			menu_idx = 0;
-		}
-		menu_val = Menu[menu_idx].selected_idx;
-		menu_change_allowed = 0;
-		break;
+			uint8_t prev_idx = menu_idx; //protect
+			do
+			{
+				if (++menu_idx == sizeof(Menu) / sizeof(MenuItem))
+				{
+					menu_idx = 0;
+				}
+				if (prev_idx == menu_idx) 
+				{
+					ForceShowString("Error in menu. No enabled items!");
+					break;
+				}				
+			} while (Menu[menu_idx].enabled == 0);		
+		
+			menu_val = Menu[menu_idx].selected_idx;
+			menu_change_allowed = 0;
+			break;
+		}		
 	default:
 		break;
 	}
@@ -116,6 +158,7 @@ void ExecCommand(uint8_t command)
 }
 void ShowMenu(void)
 {
+	menu_idx = GetFirstEnabledMenuItem();
 	display_mode = DISPLAY_SETTINGS;
 }
 
@@ -239,14 +282,18 @@ void HandleDisplayData()
 		}
 		break;
 	case DISPLAY_SETTINGS:
-		memcpy(displayBuffer, defaultScreen, DISPLAY_BUFFER_SIZE);
-		sprintf((char*)displayDataBuffer, "%s: %*s", Menu[menu_idx].name, 3, Menu[menu_idx].items[menu_val]);
-		if (menu_delay_cnt++ > MENU_SHOW_DELAY)
+		
+		if (menu_idx >= (sizeof(Menu) / sizeof(MenuItem)) || menu_delay_cnt++ > MENU_SHOW_DELAY)
 		{
 			menu_delay_cnt = 0;
 			main_fsm = NORMAL_STATE;
-			display_mode = DISPLAY_NORMAL;
-		}		
+			display_mode = DISPLAY_NORMAL;	
+			break;
+		}
+		
+		memcpy(displayBuffer, defaultScreen, DISPLAY_BUFFER_SIZE);
+		sprintf((char*)displayDataBuffer, "%s: %*s", Menu[menu_idx].name, 3, Menu[menu_idx].items[menu_val]);
+		
 		if (menu_delay_cnt == MENU_APPLY_DELAY)
 		{
 			if (menu_change_allowed)

@@ -20,9 +20,10 @@ typedef struct MenuItem_s
 	char name[8];
 	uint8_t id;
 	uint8_t items_cnt;
-	const char* items[6];
-	uint8_t values[6];
+	const char* items[8];
+	uint8_t values[8];
 	uint8_t selected_idx;
+	uint8_t enabled;
 }MenuItem;
 
 
@@ -37,6 +38,7 @@ void CheckMode(void);
 void ForceShowString(const char*);
 void ShowMenu(void);
 void ExecCommand(uint8_t); 
+void SetCustomItem(uint16_t);
 uint8_t isAux;
 
 #endif
