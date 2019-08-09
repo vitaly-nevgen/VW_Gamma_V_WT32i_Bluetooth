@@ -58,11 +58,8 @@ void CanRxHandler(CanRxMsg* RxMessage)
 				{
 					uint16_t custom_cell = RxMessage->Data[(i * 2) + 2];
 					custom_cell <<= 8;
-					custom_cell |= RxMessage->Data[(i * 2) + 1];
-					if (custom_cell & CAN_CUSTOM_ENABLE_MASK)
-					{						
-						SetCustomItem(custom_cell);	
-					}
+					custom_cell |= RxMessage->Data[(i * 2) + 1];			
+					SetCustomItem(custom_cell);	
 				}
 			}
 		}

@@ -78,12 +78,19 @@ void CheckMode()
 
 void SetCustomItem(uint16_t item)
 {
+	uint8_t val = (uint8_t)((item & CAN_CUSTOM_VAL_MASK) >> 6);
+	
 	for (uint8_t i = 0; i < (sizeof(Menu) / sizeof(MenuItem)); i++)
 	{		
 		if (Menu[i].id == (uint8_t)(item & CAN_CUSTOM_ID_MASK))
 		{
+			if (val >= 0x07) 
+			{		
+				Menu[i].enabled = 0;
+				return;
+			}
 			Menu[i].enabled = 1;
-			Menu[i].selected_idx = (uint8_t)((item & CAN_CUSTOM_VAL_MASK) >> 6);
+			Menu[i].selected_idx = val;
 			if (Menu[i].selected_idx >= Menu[i].items_cnt)
 			{
 				Menu[i].selected_idx = 0;
