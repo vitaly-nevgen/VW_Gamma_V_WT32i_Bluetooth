@@ -2,8 +2,6 @@
 #include "string.h"
 #include "display_handler.h"
 
-extern enum EDisplayMode display_mode;
-
 uint16_t fuel_consumption;
 uint32_t fuel_cons_cnt;
 uint8_t can_cnt = 0;
@@ -50,7 +48,7 @@ void CanRxHandler(CanRxMsg* RxMessage)
 				}							
 			}
 		}
-		if (RxMessage->StdId == CAN_ID_CUSTOM_RECEIVE && display_mode != DISPLAY_SETTINGS)		
+		if (RxMessage->StdId == CAN_ID_CUSTOM_RECEIVE)		
 		{			
 			if (RxMessage->DLC == 8)
 			{
@@ -59,7 +57,7 @@ void CanRxHandler(CanRxMsg* RxMessage)
 					uint16_t custom_cell = RxMessage->Data[(i * 2) + 2];
 					custom_cell <<= 8;
 					custom_cell |= RxMessage->Data[(i * 2) + 1];			
-					SetCustomItem(custom_cell);	
+					if (custom_cell != 0) SetCustomItem(custom_cell);	
 				}
 			}
 		}

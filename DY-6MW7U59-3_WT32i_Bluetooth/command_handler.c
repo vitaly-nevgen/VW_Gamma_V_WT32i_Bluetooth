@@ -119,6 +119,14 @@ void Bluetooth_off()
 #endif // !NEW_PCB
 }
 
+void BluetoothPlayPause()
+{
+	if (playbackState == play)
+		bt_Pause();
+	else
+		bt_Play();
+}
+
 void SendCommand()
 {
 	uint8_t chksum = 0;
@@ -208,7 +216,7 @@ void HandleCommandData()
 			}
 			else if (button_val == CD_BUTTON)
 			{
-				ActivateAUX();             //TODO: убрать костыль
+				ActivateAUX(); //TODO: убрать костыль
 			}
 			else if (button_val == POWER_BUTTON)
 			{
@@ -233,10 +241,7 @@ void HandleCommandData()
 			if (avrcp_trig == 0)
 			{
 				bt_PlaybackStatusEventSubscribe();
-				if (playbackState == play)
-					ExecuteWithDelay(bt_Pause, 1);
-				else
-					ExecuteWithDelay(bt_Play, 1);
+				ExecuteWithDelay(BluetoothPlayPause, 3);
 				avrcp_trig = 1;
 			}
 			commandBuffer[1] = NOTHING;

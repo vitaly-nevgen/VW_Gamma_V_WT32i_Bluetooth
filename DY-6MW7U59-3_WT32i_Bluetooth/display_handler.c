@@ -78,24 +78,27 @@ void CheckMode()
 
 void SetCustomItem(uint16_t item)
 {
-	uint8_t val = (uint8_t)((item & CAN_CUSTOM_VAL_MASK) >> 6);
+	if (display_mode == DISPLAY_SETTINGS && menu_change_allowed) return;
 	
+	uint8_t val = (uint8_t)((item & CAN_CUSTOM_VAL_MASK) >> 6);
+	uint8_t id = (uint8_t)(item & CAN_CUSTOM_ID_MASK);
+		
 	for (uint8_t i = 0; i < (sizeof(Menu) / sizeof(MenuItem)); i++)
 	{		
-		if (Menu[i].id == (uint8_t)(item & CAN_CUSTOM_ID_MASK))
+		if (Menu[i].id == id)
 		{
 			if (val >= 0x07) 
 			{		
 				Menu[i].enabled = 0;
 				return;
-			}
+			}			
 			Menu[i].enabled = 1;
 			Menu[i].selected_idx = val;
 			if (Menu[i].selected_idx >= Menu[i].items_cnt)
 			{
 				Menu[i].selected_idx = 0;
 				ForceShowString("Error in menu. Index out of range.");			
-			}
+			}		
 			break;
 		}
 	}
@@ -139,7 +142,7 @@ void ExecCommand(uint8_t command)
 		break;
 	case POWER_BUTTON:
 		{
-			uint8_t prev_idx = menu_idx; //protect
+			uint8_t prev_idx = menu_idx;  //protect
 			do
 			{
 				if (++menu_idx == sizeof(Menu) / sizeof(MenuItem))
@@ -151,7 +154,7 @@ void ExecCommand(uint8_t command)
 					ForceShowString("Error in menu. No enabled items!");
 					break;
 				}				
-			} while (Menu[menu_idx].enabled == 0);		
+			} while (Menu[menu_idx].enabled == 0) ;		
 		
 			menu_val = Menu[menu_idx].selected_idx;
 			menu_change_allowed = 0;
@@ -166,6 +169,7 @@ void ExecCommand(uint8_t command)
 void ShowMenu(void)
 {
 	menu_idx = GetFirstEnabledMenuItem();
+	if (menu_idx != 0xFF) menu_val = Menu[menu_idx].selected_idx;
 	display_mode = DISPLAY_SETTINGS;
 }
 
@@ -310,9 +314,7 @@ void HandleDisplayData()
 			}			
 		}
 		break;
-	case DISPLAY_OTHER:
-		
-		
+	case DISPLAY_OTHER:		
 		break;
 	default:
 		break;

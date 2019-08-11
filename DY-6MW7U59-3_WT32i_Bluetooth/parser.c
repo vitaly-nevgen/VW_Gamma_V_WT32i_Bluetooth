@@ -230,8 +230,8 @@ void HandleParseData()
 			{
 				if (isStrEqual(argv[4], (uint8_t*) "TRACK_CHANGED"))
 				{
-					bt_GetAVRCP_metadata();
-					//ExecuteWithDelay(bt_GetAVRCP_metadata, 1);
+					//bt_GetAVRCP_metadata();
+					ExecuteWithDelay(bt_GetAVRCP_metadata, 2);
 					ExecuteWithDelay(bt_TrackChangedEventSubscribe, 1);					
 					return;
 				}
@@ -249,7 +249,7 @@ void HandleParseData()
 					{
 						playbackState = stop;
 					}
-					bt_PlaybackStatusEventSubscribe();
+					ExecuteWithDelay(bt_PlaybackStatusEventSubscribe, 1);	
 				}
 			}
 		}
@@ -265,7 +265,7 @@ void HandleParseData()
 			ExecuteWithDelay(bt_GetBtDeviceAddres, 5);
 			ExecuteWithDelay(bt_GetDeviceName, 1);
 			ExecuteWithDelay(bt_GetAVRCP_metadata, 1);				
-			ExecuteWithDelay(bt_Play, 5);				
+			if (playbackState != play) ExecuteWithDelay(bt_Play, 5);				
 		}			
 		return;
 	}
